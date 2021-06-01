@@ -1,7 +1,7 @@
 ﻿
 namespace RayTracing
 {
-    partial class Form1
+    partial class RTForm
     {
         /// <summary>
         ///  Required designer variable.
