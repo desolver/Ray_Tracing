@@ -8,12 +8,18 @@ namespace RayTracing
 {
     public partial class RTForm : Form
     {
-        private Camera _camera = new Camera(
+        private readonly Camera _camera = new Camera(
             600, 600, 
             (float) Math.PI / 3, 
             Vector3.Zero, 
             Vector3.UnitZ);
 
+        private readonly Light[] _lights =
+        {
+            new Light(new Vector3(2, 2.5f, 9), 3), 
+            new Light(new Vector3(3, 3.5f, 9.6f), 3.5f)
+        };
+        
         public RTForm()
         {
             InitializeComponent();
@@ -41,12 +47,21 @@ namespace RayTracing
 
                     var direction = new Vector3(x, y, _camera.Direction.Z).Normalize();
                     var distToSphere = float.MaxValue;
-                    var sphere = new Sphere(new Vector3(-3, -3, 10), 2);
+                    var sphere = new Sphere(new Vector3(-3, -3, 10), 2, new Material(Color.Red));
 
                     var pixelColor = sphere.IsIntersectWithRay(_camera.Position, direction, ref distToSphere)
-                        ? Color.Red
+                        ? sphere.Material.DiffuseColor
                         : Color.GreenYellow;
 
+                    float lightIntensity = 0;
+                    foreach (var light in _lights)
+                    {
+                        var lightDirection = (light.Position - Vector3.Zero).Normalize();
+                        lightIntensity  += light.Intensity * Math.Max(0, lightDirection.GetCoordPermutationsWith());
+                    }
+                    
+                    material.diffuse_color * lightIntensity;
+                    
                     image.SetPixel(j, i, pixelColor);
                 }
             }

@@ -7,11 +7,14 @@ namespace RayTracing
     {
         public Vector3 Center { get; }
         public float Radius { get; }
+        public Material Material { get; }
 
-        public Sphere(Vector3 center, float radius)
+
+        public Sphere(Vector3 center, float radius, Material material)
         {
             Center = center;
             Radius = radius;
+            Material = material;
         }
         
         public bool IsIntersectWithRay(Vector3 origin, Vector3 originDirection, ref float t0)
@@ -25,11 +28,9 @@ namespace RayTracing
 
             var thc = (float) Math.Sqrt(Radius * Radius - d2);
             t0 = tca - thc;
-            
             var t1 = tca + thc;
             if (t0 < 0) t0 = t1;
-            if (t0 < 0) return false;
-            return true;
+            return !(t0 < 0);
         }
     }
 }
